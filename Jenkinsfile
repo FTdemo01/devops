@@ -6,23 +6,21 @@ def deployCommand = """mkdir -p /tmp/deploy
 """
 def remoteDir = "/tmp/deploy"
 
-properties([
-    parameters([
+pipeline {
+    agent any
+    
+    parameters {
         choice(
             name: 'ENVIRONMENT',
             description: 'Environment to deploy',
             choices: ['dev1', 'dev2', 'prod']
-        ),
+        )
         booleanParam(
             name: 'DEPLOY_3RD',
             defaultValue: false,
             description: 'When selected, following containers will be updated: haproxy, elasticsearch, mongo, logstash, serviceapi, rabbit, eureka, msap-prototype, screening, reporting, gateway, admin'
         )
-    ])
-])
-
-pipeline {
-    agent any
+    }
     
     stages {
         stage('Checkout') {
@@ -30,7 +28,27 @@ pipeline {
                 sh 'git clone --branch main-docker https://github.com/FTdemo01/contacts.app.api-testing.git'
                 sleep(30)
             }
-        },
+        }
+        
+        stage ('Prepare') {
+            steps {
+                sshPublisher(
+                    publishers: [
+                        sshPublisherDesc(
+                            configName: 'wyoming.dyp.cloud',
+                            transfers: [
+                                sshTransfer(
+                                    execCommand: deployCommand,
+                                    execTimeout: sshTimeout,
+                                    remoteDirectory: remoteDir,
+                                    sourceFiles: ''
+                                )
+                            ]
+                        )
+                    ]
+                )
+            }
+        }
         
         stage('Deploy') {
             when {
