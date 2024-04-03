@@ -40,7 +40,7 @@ pipeline {
                 script {
                     sh "pwd"
                     sh "ls -l"
-                    sh 'docker-compose -f docker-compose.yaml up -d'
+                    sh 'docker-compose -f docker-composer.yaml up -d'
                 }
             }
         }
