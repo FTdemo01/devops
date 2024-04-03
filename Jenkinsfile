@@ -30,25 +30,7 @@ pipeline {
             }
         }
         
-        stage ('Prepare') {
-            steps {
-                sshPublisher(
-                    publishers: [
-                        sshPublisherDesc(
-                            configName: 'wyoming.dyp.cloud',
-                            transfers: [
-                                sshTransfer(
-                                    execCommand: deployCommand,
-                                    execTimeout: sshTimeout,
-                                    remoteDirectory: remoteDir,
-                                    sourceFiles: ''
-                                )
-                            ]
-                        )
-                    ]
-                )
-            }
-        }
+        
         
         stage('Deploy') {
             when {
