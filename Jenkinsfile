@@ -23,26 +23,24 @@ pipeline {
     }
     
     stages {
-
-        stage('SSH-agent') {
+        stage('SSH') {
             steps {
                 script {
-                    // SSH Agent configuration
-                    sshagent (['ssh-agent'])' {
-                        sh 'ssh -tt strictHostKeyChecking=no ec2-user@52.35.71.228 ls'
+                    sshagent(credentials: ['ssh-agent']) {
+                        // Execute SSH commands within this block
+                        sh 'ssh -tt -o StrictHostKeyChecking=no ec2-user@52.35.71.228 ls'
+                        
                     }
                 }
             }
         }
-
+        
         stage('Checkout') {
             steps {
                 sh 'git clone --branch main-docker https://github.com/FTdemo01/contacts.app.api-testing.git'
                 sleep(30)
             }
         }
-        
-        
         
         stage('Deploy') {
             when {
