@@ -38,6 +38,8 @@ pipeline {
             }
             steps {
                 script {
+                    sh "pwd"
+                    sh "ls -l"
                     sh 'docker-compose -f docker-compose.yaml up -d'
                 }
             }
