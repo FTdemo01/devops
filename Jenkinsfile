@@ -27,7 +27,11 @@ pipeline {
         stage('SSH') {
             steps {
                 script {
-                    sshagent(credentials: ['ssh-agent']) {
+                    sshagent(['ssh-agent']) {
+                        // some block
+                    
+
+                    
                         // Execute SSH commands within this block
                         sh 'ssh -tt -o StrictHostKeyChecking=no ec2-user@35.91.172.141 ls'
 
