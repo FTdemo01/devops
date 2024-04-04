@@ -23,17 +23,7 @@ pipeline {
     }
     
     stages {
-        stage('SSH') {
-            steps {
-                script {
-                    sshagent(credentials: ['ssh-agent']) {
-                        // Execute SSH commands within this block
-                        sh 'ssh -tt -o StrictHostKeyChecking=no ec2-user@52.35.71.228 ls'
-                        
-                    }
-                }
-            }
-        }
+        
         
         stage('Checkout') {
             steps {
