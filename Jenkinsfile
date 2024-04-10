@@ -23,12 +23,42 @@ pipeline {
     }
     
     stages {
-        stage('login server') {
+        
+        stage('deploy') {
             steps {
-                sshagent(credentials:['Login_Cloud_Server']) {
-                    sh 'ssh -o StrictHostKeyChecking=no root@18.246.243.82 uptime "whoami"'
+                script {
+                    sshPublisher (
+                        paramPublish: [
+                            parameterName: 'ENVIRONMENT'
+                        ],
+                        publishers: [
+                            sshPublisherDesc(
+                                configName: 'ssh-test',
+                                sshLabel: [
+                                    label: 'bat'
+                                ],
+                                transfers: [
+                                    sshTransfer(
+                                        excludes: '',
+                                        execCommand: "$deployCommand",
+                                        execTimeout: sshTimeout,
+                                        flatten: false,
+                                        makeEmptyDirs: false,
+                                        noDefaultExcludes: false,
+                                        patternSeparator: '[, ]+',
+                                        remoteDirectory: remoteDir,
+                                        remoteDirectorySDF: false,
+                                        removePrefix: '',
+                                        sourceFiles: '**/*'
+                                    )
+                                ],
+                                usePromotionTimestamp: false,
+                                useWorkspaceInPromotion: false,
+                                verbose: false
+                            )
+                        ]
+                    )
                 }
-                echo "success login"
             }
         }
         
