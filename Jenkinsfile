@@ -23,20 +23,12 @@ pipeline {
     }
     
     stages {
-        
-        stage('SSH') {
+        stage('login server') {
             steps {
-                script {
-                    sshagent(['ssh-agent']) {
-                        // some block
-                    
-
-                    
-                        // Execute SSH commands within this block
-                        sh 'ssh -tt -o StrictHostKeyChecking=no ec2-user@35.91.172.141 ls'
-
-                    }
+                sshagent(credentials:['Login_Cloud_Server']) {
+                    sh 'ssh -o StrictHostKeyChecking=no root@18.246.243.82 uptime "whoami"'
                 }
+                echo "success login"
             }
         }
         
